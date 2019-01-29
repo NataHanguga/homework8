@@ -1,0 +1,66 @@
+<header>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand"><strong>TodoList</strong></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" (click)='goToLogin()'>Login </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)='update()' >Update</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="showTodo()">Watch Todo List</a>
+          </li>
+          <li class="nav-item">
+
+            <a class="nav-link" (click)='logout()'>Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+  </header>
+
+  <!-- Card -->
+<div class="wrapper">
+  <div class="custom-file">
+    <span style="color:red;" *ngIf="message">{{message}}</span>
+    <input #file type="file" accept='image/*' (change)="preview(file.files)" class="custom-file-input" id="validatedCustomFile" required/>
+    <label class="custom-file-label" for="validatedCustomFile">Choose avatar picture...</label>
+    <div class="invalid-feedback">Example invalid custom file feedback</div>
+
+  </div>
+
+<div class="testimonial-card d-flex flex-row justify-content-center align-items-stretch">
+
+    <div class="card-up indigo lighten-1"></div>
+
+    <!-- Avatar -->
+    <div class="avatar mx-auto white flex-fill">
+      <img *ngIf="imgURL" [src]="imgURL" height="250" width="250" id="avatar" class="rounded-circle" alt="woman avatar">
+      <ng-templete>
+         <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg" id="avatar" class="rounded-circle" alt="woman avatar">
+      </ng-templete>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body flex-fill">
+      <h4 class="card-title">Full Name: {{user.firstName}} {{user.lastName}}</h4>
+      <hr>
+      <div class="card-text">
+        <div>Email: {{user.email}}</div>
+        <div>Phone: {{user.phone}}</div>
+    </div>
+    </div>
+
+
+  </div>
+  <!-- Card -->
+</div>
+
