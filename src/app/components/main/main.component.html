@@ -1,0 +1,23 @@
+<div class="main">
+<div class="container d-flex flex-row  ">
+  <div class="image flex-fill">
+    <!-- <img src="../../../assets/images/bg-01.jpg" alt=""> -->
+  </div>
+  <div id="form " class="form flex-fill">
+    <div id="login">
+      <app-login id="show"></app-login>
+      <div class="registration">
+          <a class="reg-form" id="regBut" (keyup.enter)="toReg()" (click)="toReg()">Registration</a>
+    </div>
+  </div>
+  <div id="reg">
+    <app-register id="hidden"></app-register>
+    <div class="login">
+        <button class="login-form" id="logBut" (keyup.enter)="toLog()" (click)="toLog()">Login</button>
+  </div>
+  </div>
+
+
+  </div>
+</div>
+</div>
