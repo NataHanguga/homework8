@@ -6,9 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { User } from 'src/app/services/user';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { container } from '@angular/core/src/render3';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-// import { container } from '@angular/core/src/render3';
+import { FilterPipe } from '../../services/filter.pipe';
 
 @Component({
   selector: 'app-todo',
@@ -26,6 +24,10 @@ export class TodoComponent implements OnInit {
   index: any;
   inde: {};
   count: any;
+  path: string[] = ['todo'];
+  order: number = 1;
+  url: any;
+
   constructor(private todoService: TodoService,
               private router: Router,
               private auth: AuthService,
@@ -48,10 +50,18 @@ export class TodoComponent implements OnInit {
     this.getTodo();
 
       this.getUserData();
-   this.check();
+  //  this.check();
+
+   this.url = JSON.parse(localStorage.getItem('avatar'));
+  //  console.log(this.url);
   }
 
 
+  sortTodo(prop: string) {
+    this.path = prop.split('.');
+    this.order = this.order * (-1);
+    return false;
+  }
   // convenience getter for easy access to form fields
   get f() { return this.todoItem.controls; }
 
@@ -68,26 +78,24 @@ export class TodoComponent implements OnInit {
     this.todoService.getTodo()
       .subscribe( (res) => {
           this.todoList =  res;
-          this.count  = Object.keys(this.todoList).length;
-          Object.keys(res).map(key => {
-              // this.inde[this.count].value = key;
-              // this.count--;
-          });
-        console.log(this.count, this.todoList);
+          // this.count  = Object.keys(this.todoList).length;
+          this.sortTodo('status');
+        console.log(this.todoList);
       });
   }
 
-  check() {
-    for ( let j = 0; j < this.count; j++) {
-    const div = document.getElementById('check' + j);
-    // console.log(index, this.todoList[index].selected);
-    if (this.todoList[j].selected === true) {
-      div[j].checked = true;
-    } else {
-      div[j].checked = false;
-    }
-    }
-  }
+  // check() {
+  //   for ( let j = 0; j < this.count; j++) {
+  //   const div = document.getElementById('check' + j);
+  //   // console.log(index, this.todoList[index].selected);
+  //   if (this.todoList[j].selected === true) {
+  //     div[j].checked = true;
+  //   } else {
+  //     div[j].checked = false;
+  //   }
+  //   }
+  // }
+
 
   showText(i) {
     const div = document.getElementById(i);
@@ -103,6 +111,7 @@ export class TodoComponent implements OnInit {
   }
   cancelTask(i) {
    const el = document.getElementById('change' + i);
+   const icon = document.querySelector('.process-icon');
    if ((el.innerHTML === 'done') && (this.todoList[i].status = 'done')) {
       el.innerHTML = 'undone';
       this.todoList[i].status = 'undone';
@@ -110,6 +119,7 @@ export class TodoComponent implements OnInit {
       el.innerHTML = 'done';
       this.todoList[i].status = 'done';
     }
+    this.todoService.updateTodo(this.todoList[i]);
   }
 
   deleteTask(id) {
@@ -124,45 +134,58 @@ export class TodoComponent implements OnInit {
       );
     }
   }
-  showBut(idx) {
-    const conteiner = document.getElementById('menu' + idx);
-    const buts = document.getElementById('butts');
-    // conteiner.className = 'menu-show';
-    console.log(idx);
-    if (conteiner.className === 'menu-show') {
-      buts.style.display = 'block';
-      conteiner.className = 'menu-hidden';
-    } else if (conteiner.className === 'menu-hidden') {
-      buts.style.display = 'none';
-      conteiner.className = 'menu-show';
-    }
+
+  fullCardModal(i) {
+    const title = this.todoList[i].title;
+    const description = this.todoList[i].description;
+    // const edit = this.editTask(i);
+  //  document.getElementById('fullCardModal').style.display = 'block' ;
+  //  document.getElementById('fullCardModalLabel').innerText = title;
+  //   document.getElementById('modalBody').innerText = description;
+    document.querySelector('.fullCardModal').innerHTML = `
+    <modal  class="modal fade bottom" id="fullCardModal" tabindex="-1"
+    role="dialog" aria-labelledby="fullCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h5 class="modal-title w-100 font-weight-bold" id="fullCardModalLabel">` + title + `</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body"style="
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        text-align: justify;">
+         ` + description + `
+        </div>
+      </div>
+    </div>
+  </modal>
+  `;
   }
 
-  checkCall(i) {
-    const div = document.getElementById('check' + i);
-    // if (div[i].checked) {
-    //   this.todoList[i].selected = true;
-    //   // make put request to server
-    // }
-  }
   editTask(idx) {
     const title = this.todoList[idx].title;
     const result = prompt('edit title', title);
     if (result !== null && result !== '') {
       this.todoList[idx].title = result;
+      this.todoList[idx].status = 'new';
     }
-  }
-
-  addTodo() {
-    const div = document.getElementById('container');
-    const but = document.getElementById('addTodo');
-    if (but.innerHTML === 'Add todo') {
-      div.style.display = 'flex';
-      but.innerHTML = 'Hidden add todo';
-    }  else if (but.innerHTML === 'Hidden add todo') {
-      div.style.display = 'none';
-      but.innerHTML = 'Add todo';
-    }
+    this.todoService.updateTodo(this.todoList[idx]).subscribe(
+      res => {
+        this.getTodo();
+        console.log(res);
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        console.log('complite update todo');
+      });
+    // this.getTodo();
+    // console.log(this.todoList[idx]);
   }
 
   add() {
@@ -173,12 +196,6 @@ export class TodoComponent implements OnInit {
     this.getTodo();
   }
 
-  change(id: string) {
-    console.log(id);
-    this.todoService.getTodoById(id)
-      .subscribe(res => console.log(res));
-  }
-
   delete(id) {
     this.todoService.deleteTodo(id)
       .subscribe(
@@ -187,36 +204,6 @@ export class TodoComponent implements OnInit {
             .filter((t) => t._id !== id);
         }
       );
+      this.getTodo();
   }
-/*
-  addTodo() {
-    // this.todoService.addTodo(this.newTodo);
-   // this.newTodo = new Todo();
-    const data = JSON.parse(this.cookieService.get(this.auth.getCookie()));
-    data.todoList.todos = this.todoService.addTodo(this.newTodo);
-
-    console.log(JSON.stringify(this.newTodo));
-    this.cookieService.set(this.auth.getCookie(), data);
-   this.newTodo = new Todo();
-   console.log(data);
-  }
-
-  toggleTodoComplete(todo) {
-    // this.todoService.getTodo()
-    //   .subscribe( res => {
-    //       todo = res;
-    //   });
-    this.todoService.toggleTodoComplete(todo);
-
-  }
-
-  removeTodo(todo) {
-    this.todoService.deleteTodoById(todo.id);
-  }
-
-  get todoes() {
-    // console.log(this.todoService.getAllTodos());
-    return this.todoService.getAllTodos();
-  }
-*/
 }

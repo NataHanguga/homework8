@@ -51,7 +51,7 @@
 /***REGISTRATION*******/
 #reg{
   display: none;
-  padding: 100px 0 0 20px;
+  padding: 100px 10% 0 10%;
 
 }
 .registration{
@@ -60,7 +60,7 @@
   margin-top: 170px;
 }
 
-.reg-form, #regBut{
+.reg-form, #regBut, .login{
   font-family: Poppins-Regular;
   font-size: 15px;
   line-height: 1.4;
@@ -68,10 +68,15 @@
   text-transform: uppercase;
 }
 /**LOGIN*************************/
+.login{
+  width: 100%;
+  text-align: center;
+  margin-top: 2%;
+}
 #login{
   display: block;
   padding: 303px 0 0 20px;
-  margin-bottom: 140px;
+  /* margin-bottom: 140px; */
 }
 .container-login-form{
   width: 100%;
@@ -105,3 +110,4 @@
 .login-form:hover{
   background: #333333;
 }
+

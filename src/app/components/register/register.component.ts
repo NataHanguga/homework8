@@ -59,6 +59,7 @@ export class RegisterComponent implements OnInit {
   get f() { return this.registerForm.controls; }
 
   onSubmit() {
+      this.cookieService.deleteAll();
       this.submitted = true;
 
       // stop here if form is invalid
@@ -66,7 +67,10 @@ export class RegisterComponent implements OnInit {
           return;
       }
 
-      this.cookieService.set(this.temporaryUserId, JSON.stringify(this.registerForm.value));      this.regisrer();
-      this.router.navigate(['main']);
+      this.cookieService.set(this.temporaryUserId, JSON.stringify(this.registerForm.value));
+      this.regisrer();
+      document.getElementById('main').style.display = 'none';
+      document.getElementById('mess').style.display = 'block';
+      // this.router.navigate(['main']);
   }
 }

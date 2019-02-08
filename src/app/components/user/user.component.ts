@@ -16,6 +16,7 @@ export class UserComponent implements OnInit {
   public imagePath;
   imgURL: any;
   public message: string;
+  url: any;
   public userData = JSON.parse(this.cookieService.get(this.auth.getCookie()));
   public user = new User( this.userData.firstName,
                           this.userData.lastName,
@@ -31,7 +32,9 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.user);
-    this.cookieService.deleteAll(this.auth.getCookie());
+   this.imgURL = JSON.parse(localStorage.getItem('avatar'));
+
+    // this.cookieService.deleteAll(this.auth.getCookie());
   }
 
 // BUTTON FUNCTION
@@ -73,15 +76,19 @@ export class UserComponent implements OnInit {
       this.message = 'Only images are supported.';
       return;
     }
-
+    localStorage.removeItem('avatar');
     const reader = new FileReader();
     this.imagePath = files;
     reader.readAsDataURL(files[0]);
     reader.onload = (_event) => {
       this.imgURL = reader.result;
+    localStorage.setItem('avatar', JSON.stringify(reader.result));
     };
+    // this.cookieService.set(this.temporaryUserId, JSON.stringify(this.registerForm.value));
 
     const img = document.getElementById('avatar');
     img.style.display = 'none';
+
+   this.imgURL = JSON.parse(localStorage.getItem('avatar'));
   }
 }

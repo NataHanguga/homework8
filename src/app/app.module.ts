@@ -12,10 +12,13 @@ import { TodoComponent } from './components/todo/todo.component';
 import { UpdateUserComponent } from './components/update-user/update-user.component';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './services/auth.service';
-import { TaskCardComponent } from './components/task-card/task-card.component';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { MainComponent } from './components/main/main.component';
-
+import { FilterPipe } from '../app/services/filter.pipe';
+import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
+import { SortingPipe } from './services/sorting.pipe';
+import { AlwaysAuthGuard } from './services/always-auth.guard';
+import { TodoService } from './services/todo.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,8 +27,9 @@ import { MainComponent } from './components/main/main.component';
     RegisterComponent,
     TodoComponent,
     UpdateUserComponent,
-    TaskCardComponent,
-    MainComponent
+    MainComponent,
+    FilterPipe,
+    SortingPipe
   ],
   imports: [
     BrowserModule,
@@ -33,11 +37,14 @@ import { MainComponent } from './components/main/main.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MDBBootstrapModule
+    MDBBootstrapModule,
+    Ng2FilterPipeModule
   ],
   providers: [
     CookieService,
-    AuthService
+    AuthService,
+    AlwaysAuthGuard,
+    TodoService
   ],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]

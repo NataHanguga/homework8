@@ -1,11 +1,11 @@
 <!-- main app container -->
 
-  <div class="container row">
+  <div class="container row" id="main">
           <div class="form-title">
               <h3>Registration</h3>
           </div>
               <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-                  <div class="form-group wrap-input100 rs1-wrap-input100 validate-input">
+                  <div class="form-group wrap-input100 rs1-wrap-input100 validate-input d-flex justify-content-center">
                       <input type="text"
                               placeholder="First Name"
                               formControlName="firstName"
@@ -79,7 +79,11 @@
                           <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
                       </div>
                       <span class="focus-input100"></span>
-                      <button (click)="onSubmit()">put</button>
+
                   </div>
+                  <div class="form-group">
+                      <button class="btn green login-form" >Registration</button>
+                      </div>
               </form>
           </div>
+          <div class="form-title mess" id="mess">good job) now you can login corectly in this site)</div>

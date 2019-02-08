@@ -8,7 +8,6 @@ import { Validators,
           FormBuilder } from '@angular/forms';
 import { User } from '../../services/user';
 import { CookieService } from 'ngx-cookie-service';
-import { FormService } from 'src/app/services/form.service';
 
 @Component({
   selector: 'app-login',
@@ -30,12 +29,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private formBuilder: FormBuilder,
     private router: Router,
     private auth: AuthService,
-    private cookieService: CookieService,
-    private formService: FormService) {}
+    private cookieService: CookieService) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      firstName: ['', Validators.required], // Validators.pattern(this.name)]],
+      firstName: ['', Validators.required, Validators.pattern('\w{0,}$')], // Validators.pattern(this.name)]],
       password: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
