@@ -24,7 +24,7 @@ export class AuthService {
   token: any;
  // url = 'https://lectorium.herokuapp.com/api/todolist';
   user: User;
-
+  onLogin: boolean = false;
 
   constructor(private router: Router,
               private http: HttpClient,
@@ -34,20 +34,18 @@ export class AuthService {
       return 'eyJhbGciOiJIUzI1NiJ9.bmV3dGVzdHVzZXJfbmV3dGVzdHBhc3M.6G0GjokS52wciQthCjbg1lxIBc_2euvZjhgw5igtZ8Y';
     }
 
-  loginUser() {
-    if (this.name === 'test' && this.password === 'admin') {
-      this.router.navigate(['user']);
-    }
-  }
-
    public loginToken(data): Observable<User> {
     const body = JSON.stringify(data);
+    this.onLogin = true;
      return this.http.post<User>(this.link, body, {observe: 'body', responseType: 'json'});
    }
 
    public registerToken(data): Observable<User> {
+    const options = {headers: new HttpHeaders ({
+      'Content-Type': 'application/json'
+   })};
      const body = JSON.stringify(data);
-     return this.http.post<User>(this.linkRegistration, body);
+     return this.http.post<User>(this.linkRegistration, body, options);
    }
 
    public updateToken(data: User): Observable<User> {
@@ -55,9 +53,6 @@ export class AuthService {
       'x-apikey': 'eyJhbGciOiJIUzI1NiJ9.dGVzdDFfYWRtaW4.j210uMqQxhPgKiGSV6b-ie71cBRXOACT1qLEbhUkDfk',
       'Content-Type': 'application/json'
    })};
-  //  const options = new RequestOptions({headers: headers});
-    // const body = JSON.stringify(data);
-    // console.log(body);
     const link = 'https://lectorium.herokuapp.com/api/user';
     return this.http.put<User>(link, data, options);
   }

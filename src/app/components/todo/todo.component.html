@@ -3,7 +3,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark">
       <a class="navbar-brand"><strong>{{user.firstName}}'s todo list</strong></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      <button class="navbar-toggler" (click)="goToProfile()" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -12,153 +12,142 @@
           <li class="nav-item">
             <a class="nav-link" (click)="goToProfile()">Go back to Profile</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" id="addTodo" (click)="addTodo()">Add todo</a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </nav>
 
   </header>
-<!--  -->
+  <!--  -->
 
-<!-- Button trigger modal -->
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalHorizontal">
-    Launch Horizontal Form
+  <!-- <div class="avatar d-flex justify-content-end">
+    <img *ngIf="url" [src]="url" height="100" width="100" id="avatar" class="rounded-circle" >
+    <ng-templete>
+      <img *ngIf="!url" src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg" id="avatar" class="rounded-circle" >
+        </ng-templete>
+  </div> -->
+
+
+  <!-- Button trigger modal -->
+  <div class="buttonContainer">
+    <button class="btn add-btn" data-toggle="modal" data-target="#myModalHorizontal">
+   Add
 </button>
-
-<!-- Modal -->
-<div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <button type="button" class="close"
-                   data-dismiss="modal">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
                        <span aria-hidden="true">&times;</span>
                        <span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title form-title" id="myModalLabel">
-                    Add New Todo Task
-                </h4>
-            </div>
+          <h4 class="modal-title form-title" id="myModalLabel">
+            Add New Todo Task
+          </h4>
+        </div>
 
-            <!-- Modal Body -->
-            <div class="modal-body">
+        <!-- Modal Body -->
+        <div class="modal-body">
 
-                <form class="form-horizontal" role="form" [formGroup]="todoItem" (ngSubmit)="add()">
-                    <div class="form-group wrap-input100  rs1-wrap-input100 validate-input">
-                        <input type="text"
+          <form class="form-horizontal" role="form" [formGroup]="todoItem" (ngSubmit)="add()">
+            <div class="form-group wrap-input100  rs1-wrap-input100 validate-input">
+              <input type="text"
                                 formControlName="title"
                                 placeholder="Title"
                                 class="form-control input100"
                                 [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
-                        <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
-                          <div *ngIf="f.title.errors.required">First Name is required</div>
-                        </div>
-                      </div>
-                      <div class="form-group wrap-input100  rs1-wrap-input100 validate-input">
-                        <input type="description"
+              <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                <div *ngIf="f.title.errors.required">First Name is required</div>
+              </div>
+            </div>
+            <div class="form-group wrap-input100  rs1-wrap-input100 validate-input">
+              <input type="description"
                                 formControlName="description"
                                 placeholder="Description"
                                 class="form-control input100 description"
                                 [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-                        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-                          <div *ngIf="f.description.errors.required">description is required</div>
-                        </div>
-                      </div>
-                </form>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <div class="form-group container-login-form">
-                    <button class="btn login-form">Add</button>
-                  </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-<!--  -->
-  <div id="container">
-    <div class="form-title">
-      <h3>Add New Todo Task</h3>
-    </div>
-    <form [formGroup]="todoItem" (ngSubmit)="add()">
-      <div class="form-group wrap-input100  rs1-wrap-input100 validate-input">
-        <input type="text"
-                formControlName="title"
-                placeholder="Title"
-                class="form-control input100"
-                [ngClass]="{ 'is-invalid': submitted && f.title.errors }" />
-        <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
-          <div *ngIf="f.title.errors.required">First Name is required</div>
-        </div>
-      </div>
-      <div class="form-group wrap-input100  rs1-wrap-input100 validate-input">
-        <input type="description"
-                formControlName="description"
-                placeholder="Description"
-                class="form-control input100"
-                [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-        <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
-          <div *ngIf="f.description.errors.required">description is required</div>
-        </div>
-      </div>
-      <div class="form-group container-login-form">
-        <button class="btn login-form">Add</button>
-      </div>
-
-    </form>
-
-  </div>
-  <!-- Card -->
-  <div class="container align-items-left d-flex flex-wrap  flex-column ">
-    <div class="form-title">
-      <h3>Todo List</h3>
-    </div>
-    <div class="wrapper pop" *ngFor="let todo of todoList; let i = index">
-      <div class=" flex-row d-flex align-items-center wrap-input100 wrap-input rs1-wrap-input100 validate-input">
-        <div (click)="showText(i)" class=" d-flex flex-fill">
-          <!-- Card content -->
-          <div class="card-body input-100 d-inline" *ngIf="todo.status === 'done'; else elseId">
-
-            <input type="checkbox" class="chk" id="check{{i}}" (click)="checkCall(i)"/>
-            <label for="check{{i}}" class="d-inline d-flex ">
-                    <div><i class="fa fa-check"></i></div>
-                     <h4> <s class="card-title ">{{i + 1}}. {{todo.title}}</s></h4>
-                  </label>
-                </div>
-            <ng-template #elseId class="d-inline">
-              <div class="card-body d-inline">
-                <input type="checkbox" class="chk" id="check{{i}}" (click)="checkCall(i)"/>
-                <label for="check{{i}}" class="d-inline d-flex">
-                      <div><i class="fa fa-check"></i></div>
-                       <h4 class="card-title ">{{i + 1}}. {{todo.title}}</h4>
-                    </label>
+              <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+                <div *ngIf="f.description.errors.required">description is required</div>
               </div>
-            </ng-template>
+            </div>
+          </form>
+        </div>
 
-          <div id=button{{i}} class="show">
-
-            <div class="card-text" id={{i}}> {{todo.description}} </div>
-            <button class="btn btn-primary btn-xs" (click)="editTask(i)"><i class="fa fa-edit fa-lg"></i></button>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <div class="form-group container-login-form">
+            <button class="btn login-form add" data-dismiss="modal"  (click)="add()">Add</button>
           </div>
         </div>
-        <div>
-          <button class="btn btn-success" id="change{{i}}" (click)="cancelTask(i)">{{todo.status}}</button>
-          <button class="btn btn-danger" (click)="deleteTask(todo._id)"><i class="fa fa-trash fa-lg"></i></button>
-
-        </div>
-
       </div>
     </div>
-    <!-- Card -->
   </div>
+
+  <div class="container align-items-left d-flex flex-wrap  flex-column ">
+    <div class="containerButtonBar d-flex  justify-content-between">
+      <div class="container">
+        <div class="follow">
+          <div class="icon first" (click)="sortTodo('title')">Title</div>
+          <div class="icon" (click)="sortTodo('status')">Status</div>
+          <div class="icon last" (click)="sortTodo('selected')">Selected</div>
+          <div class="label">Select sorting</div>
+        </div>
+      </div>
+      <div class="search__container">
+        <input type="text" class="search__input form-control" [(ngModel)]="searchText" placeholder="search text goes here"/>
+      </div>
+      </div>
+      <div class="wrapper pop" *ngFor="let todo of todoList | filter: searchText | sorting:path:order; let i = index">
+        <div class=" flex-row d-flex align-items-center wrap-input100 wrap-input rs1-wrap-input100 validate-input">
+          <div class=" d-flex flex-fill card-container" id="modalActivate" data-toggle="modal" data-target="#fullCardModal"
+            (click)="fullCardModal(i)">
+            <!-- Card content -->
+            <div class="card-body input-100 d-inline flex-fill" *ngIf="todo.status === 'done'; else elseId">
+              <h4 class="card-title " id="modalActivate" data-toggle="modal" data-target="#fullCardModal" (click)="fullCardModal(i)">
+                <s>{{i + 1}}. {{todo.title}}</s></h4>
+            </div>
+            <ng-template #elseId class="d-inline">
+              <div class="card-body d-inline">
+                <h4 class="card-title ">{{i + 1}}. {{todo.title}}</h4>
+              </div>
+            </ng-template>
+          </div>
+          <div>
+            <!-- <button class="btn btn-primary" id="modalActivate" data-toggle="modal" data-target="#fullCardModal" (click)="fullCardModal(i)"></button> -->
+            <div class="process-icon"></div>
+            <button class="btn btn-success" id="change{{i}}" (click)="cancelTask(i)">{{todo.status}}</button>
+            <button class="btn btn-primary" (click)="editTask(i)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+            <button class="btn btn-danger" (click)="deleteTask(todo._id)"><i class="fa fa-trash fa-lg"></i></button>
+          </div>
+          <div class="fullCardModal" >
+              <!-- <modal  class="modal fade bottom" id="fullCardModal" tabindex="-1"
+              role="dialog" aria-labelledby="fullCardModalLabel" aria-hidden="true">
+              <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                  <div class="modal-header text-center">
+                    <h5 class="modal-title w-100 font-weight-bold" id="fullCardModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="modalBody"></div>
+                   <div class="modal-footer" id="edit">
+                  <button class="login-form btn add" (click)="editTask(i)" >Edit</button>
+                  </div>
+                </div>
+              </div>
+            </modal> -->
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </div>

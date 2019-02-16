@@ -1,3 +1,4 @@
+<div class="main">
 <header>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -39,13 +40,11 @@
 
 <div class="testimonial-card d-flex flex-row justify-content-center align-items-stretch">
 
-    <div class="card-up indigo lighten-1"></div>
-
     <!-- Avatar -->
-    <div class="avatar mx-auto white flex-fill">
-      <img *ngIf="imgURL" [src]="imgURL" height="250" width="250" id="avatar" class="rounded-circle" alt="woman avatar">
+    <div class="avatar mx-auto flex-fill">
+      <img *ngIf="imgURL" [src]="imgURL" height="250" width="250" class="rounded-circle" id="avatar"  alt="woman avatar">
       <ng-templete>
-         <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg" id="avatar" class="rounded-circle" alt="woman avatar">
+         <img *ngIf="!imgURL" src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2810%29.jpg" id="avatar" class="rounded-circle" alt="woman avatar">
       </ng-templete>
     </div>
 
@@ -63,4 +62,4 @@
   </div>
   <!-- Card -->
 </div>
-
+</div>

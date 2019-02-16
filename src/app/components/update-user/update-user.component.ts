@@ -69,6 +69,7 @@ export class UpdateUserComponent implements OnInit {
       alert('input corect data');
       return;
     } else { // add to cookieStorage update user
+      this.cookieService.delete(this.key);
       this.cookieService.set(this.key, JSON.stringify({
         firstName: this.updateForm.value.firstName,
         lastName: runner.lastName,
