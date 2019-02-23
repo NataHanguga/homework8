@@ -1,12 +1,33 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Todo } from 'src/app/services/todo';
-import { Router } from '@angular/router';
-import { TodoService } from 'src/app/services/todo.service';
-import { AuthService } from 'src/app/services/auth.service';
-import { CookieService } from 'ngx-cookie-service';
-import { User } from 'src/app/services/user';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FilterPipe } from '../../services/filter.pipe';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  Todo
+} from 'src/app/services/todo';
+import {
+  Router
+} from '@angular/router';
+import {
+  TodoService
+} from 'src/app/services/todo.service';
+import {
+  AuthService
+} from 'src/app/services/auth.service';
+import {
+  CookieService
+} from 'ngx-cookie-service';
+import {
+  User
+} from 'src/app/services/user';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
+import {
+  FilterPipe
+} from '../../services/filter.pipe';
 
 @Component({
   selector: 'app-todo',
@@ -17,28 +38,33 @@ export class TodoComponent implements OnInit {
 
   todos: Todo[] = [];
   todoList: {};
-  user: {};
+  // user: {};
   btnStyle: string;
-  key: string = this.auth.getCookie();
+  key: string = this.cookieService.get('token');
   todoItem: FormGroup;
   index: any;
   inde: {};
   count: any;
   path: string[] = ['todo'];
-  order: number = 1;
+  order = 1;
   url: any;
+
+  public userData = JSON.parse(this.cookieService.get(this.cookieService.get('token')));
+  public user = new User( this.userData.firstName,
+                          this.userData.lastName,
+                          this.userData.email,
+                          this.userData.phone,
+                          this.userData.password );
 
   constructor(private todoService: TodoService,
               private router: Router,
               private auth: AuthService,
               private cookieService: CookieService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder) {}
 
 
   ngOnInit() {
-   // const idValue = this.todoService.randomId();
     this.todoItem = this.formBuilder.group({
-     // id: [idValue, Validators.required],
       userId: [this.auth.getCookie(), Validators.required],
       title: ['', Validators.required],
       description: ['', Validators.required],
@@ -46,14 +72,7 @@ export class TodoComponent implements OnInit {
       status: ['undone', Validators.required]
     });
 
-    //  this.cancelTask(this.index);
     this.getTodo();
-
-      this.getUserData();
-  //  this.check();
-
-   this.url = JSON.parse(localStorage.getItem('avatar'));
-  //  console.log(this.url);
   }
 
 
@@ -63,85 +82,63 @@ export class TodoComponent implements OnInit {
     return false;
   }
   // convenience getter for easy access to form fields
-  get f() { return this.todoItem.controls; }
+  get f() {
+    return this.todoItem.controls;
+  }
 
   goToProfile() {
-     this.router.navigate(['user', this.key]);
-  }
-  getUserData() {
-    this.user = JSON.parse(this.cookieService.get(this.auth.getCookie()));
-      console.log(this.user);
-      return this.user;
+    this.router.navigate(['user',  this.cookieService.get('token')]);
   }
 
   getTodo() {
-    this.todoService.getTodo()
-      .subscribe( (res) => {
-          this.todoList =  res;
-          // this.count  = Object.keys(this.todoList).length;
-          // this.sortTodo('status');
+    this.todoService.getTodo(this.key)
+      .subscribe((res) => {
+        this.todoList = res;
         console.log(this.todoList);
       });
   }
 
-  // check() {
-  //   for ( let j = 0; j < this.count; j++) {
-  //   const div = document.getElementById('check' + j);
-  //   // console.log(index, this.todoList[index].selected);
-  //   if (this.todoList[j].selected === true) {
-  //     div[j].checked = true;
-  //   } else {
-  //     div[j].checked = false;
-  //   }
-  //   }
-  // }
-
-
-  showText(i) {
-    const div = document.getElementById(i);
-    const conteiner = document.getElementById('button' + i);
-    if (conteiner.className === 'show') {
-        div.style.display = 'block';
-        conteiner.className = 'hidden';
-      } else if (conteiner.className === 'hidden') {
-        div.style.display =  'none';
-        conteiner.className = 'show';
-      }
-
-  }
-  cancelTask(i) {
-   const el = document.getElementById('change' + i);
-   const icon = document.querySelector('.process-icon');
-   if ((el.innerHTML === 'done') && (this.todoList[i].status = 'done')) {
-      el.innerHTML = 'undone';
-      this.todoList[i].status = 'undone';
-    } else {
-      el.innerHTML = 'done';
+  checked(i) {
+    // console.log(i);
+    if (this.todoList[i].status === 'undone') {
       this.todoList[i].status = 'done';
+    } else if (this.todoList[i].status === 'done') {
+      this.todoList[i].status = 'undone';
     }
-    this.todoService.updateTodo(this.todoList[i]);
+    this.todoService.updateTodo(this.todoList[i], this.key).subscribe(
+      res => {
+        this.getTodo();
+        console.log(res);
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        console.log('complite update todo');
+      });
   }
 
   deleteTask(id) {
     const delTask = confirm('Are you sure to delete the task?');
     if (delTask) {
-      this.todoService.deleteTodo(id)
-      .subscribe(
-        (_) => {
-          this.todos = this.todos
-            .filter((t) => t._id !== id);
-        }
-      );
+      this.todoService.deleteTodo(id, this.key)
+        .subscribe(
+          (_) => {
+            this.todos = this.todos
+              .filter((t) => t._id !== id);
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            console.log('complite delete todo');
+          });
     }
   }
 
   fullCardModal(i) {
     const title = this.todoList[i].title;
     const description = this.todoList[i].description;
-    // const edit = this.editTask(i);
-  //  document.getElementById('fullCardModal').style.display = 'block' ;
-  //  document.getElementById('fullCardModalLabel').innerText = title;
-  //   document.getElementById('modalBody').innerText = description;
     document.querySelector('.fullCardModal').innerHTML = `
     <modal  class="modal fade bottom" id="fullCardModal" tabindex="-1"
     role="dialog" aria-labelledby="fullCardModalLabel" aria-hidden="true">
@@ -166,14 +163,26 @@ export class TodoComponent implements OnInit {
   `;
   }
 
-  editTask(idx) {
-    const title = this.todoList[idx].title;
-    const result = prompt('edit title', title);
-    if (result !== null && result !== '') {
-      this.todoList[idx].title = result;
-      this.todoList[idx].status = 'new';
+change(idx) {
+  const title = this.todoList[idx].title;
+  const inputT = document.getElementById('title') as HTMLInputElement;
+  const inpputD  = document.getElementById('description') as HTMLInputElement;
+  const description = this.todoList[idx].description;
+  inputT.value = title;
+  inpputD.value = description;
+  const button = document.querySelector('.click');
+  button.id = idx;
+}
+
+  editTask() {
+    let idx = document.querySelector('.click').id;
+    const inputT = document.getElementById('title') as HTMLInputElement;
+    const inputD  = document.getElementById('description') as HTMLInputElement;
+    if ((inputT.value !== null && inputT.value !== '') || (inputD.value !== null && inputD.value !== '')) {
+      this.todoList[idx].title = inputT.value;
+      this.todoList[idx].description = inputD.value;
     }
-    this.todoService.updateTodo(this.todoList[idx]).subscribe(
+    this.todoService.updateTodo(this.todoList[idx], this.key).subscribe(
       res => {
         this.getTodo();
         console.log(res);
@@ -184,26 +193,17 @@ export class TodoComponent implements OnInit {
       () => {
         console.log('complite update todo');
       });
-    // this.getTodo();
-    // console.log(this.todoList[idx]);
+
+    inputD.value = '';
+    inputT.value = '';
+    idx = '';
   }
 
   add() {
-    // const data = new Todo(this.todoItem); // JSON.stringify(this.todoItem);
     console.log(this.todoItem.value);
-    this.todoService.createTodo(this.todoItem.value)
-      .subscribe( res => console.log(res));
+    this.todoService.createTodo(this.todoItem.value, this.key)
+      .subscribe(res => console.log(res));
     this.getTodo();
   }
 
-  delete(id) {
-    this.todoService.deleteTodo(id)
-      .subscribe(
-        (_) => {
-          this.todos = this.todos
-            .filter((t) => t._id !== id);
-        }
-      );
-      this.getTodo();
-  }
-}
+ }

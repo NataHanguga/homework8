@@ -66,8 +66,8 @@ export class RegisterComponent implements OnInit {
       if (this.registerForm.invalid) {
           return;
       }
-
-      this.cookieService.set(this.temporaryUserId, JSON.stringify(this.registerForm.value));
+      // this.cookieService.set('token', 'user');
+      localStorage.setItem('user', JSON.stringify(this.registerForm.value));
       this.regisrer();
       document.getElementById('main').style.display = 'none';
       document.getElementById('mess').style.display = 'block';

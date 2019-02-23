@@ -17,13 +17,12 @@ export class UserComponent implements OnInit {
   imgURL: any;
   public message: string;
   url: any;
-  public userData = JSON.parse(this.cookieService.get(this.auth.getCookie()));
+  public userData = JSON.parse(this.cookieService.get(this.cookieService.get('token')));
   public user = new User( this.userData.firstName,
                           this.userData.lastName,
                           this.userData.email,
                           this.userData.phone,
-                          this.userData.password,
-                          this.userData.id, '');
+                          this.userData.password);
 
   constructor(private router: Router,
               private auth: AuthService,
@@ -32,7 +31,7 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.user);
-   this.imgURL = JSON.parse(localStorage.getItem('avatar'));
+    this.imgURL = JSON.parse(localStorage.getItem('avatar'));
 
     // this.cookieService.deleteAll(this.auth.getCookie());
   }
@@ -44,10 +43,12 @@ export class UserComponent implements OnInit {
   }
 
   logout() {
-    const exit = this.cookieService.check(this.user.id);
+    const exit = this.cookieService.check(this.cookieService.get('token'));
     console.log(exit);
     if (exit) {
-      this.cookieService.delete(this.user.id);
+      this.cookieService.delete(this.cookieService.get('token'));
+      this.cookieService.delete('token');
+      this.cookieService.deleteAll('/');
       console.clear();
       this.router.navigate(['main']);
     } else {
@@ -60,12 +61,12 @@ export class UserComponent implements OnInit {
     console.log(event);
   }
   update() {
-    this.router.navigate(['update', this.auth.getCookie()]);
+    this.router.navigate(['update', this.cookieService.get('token')]);
   }
 
   showTodo() {
    // this.todoService.getTodo();
-    this.router.navigate(['todo', this.auth.getCookie()]);
+    this.router.navigate(['todo', this.cookieService.get('token')]);
   }
   preview(files) {
     if (files.length === 0) {
@@ -80,15 +81,15 @@ export class UserComponent implements OnInit {
     const reader = new FileReader();
     this.imagePath = files;
     reader.readAsDataURL(files[0]);
-    reader.onload = (_event) => {
+    reader.onload = (event) => {
       this.imgURL = reader.result;
-    localStorage.setItem('avatar', JSON.stringify(reader.result));
+      localStorage.setItem('avatar', JSON.stringify(reader.result));
     };
     // this.cookieService.set(this.temporaryUserId, JSON.stringify(this.registerForm.value));
 
     const img = document.getElementById('avatar');
     img.style.display = 'none';
 
-   this.imgURL = JSON.parse(localStorage.getItem('avatar'));
+    this.imgURL = JSON.parse(localStorage.getItem('avatar'));
   }
 }

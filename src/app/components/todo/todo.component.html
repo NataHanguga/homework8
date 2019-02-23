@@ -104,9 +104,15 @@
       </div>
       <div class="wrapper pop" *ngFor="let todo of todoList | filter: searchText | sorting:path:order; let i = index">
         <div class=" flex-row d-flex align-items-center wrap-input100 wrap-input rs1-wrap-input100 validate-input">
+
+          <div class="statuss">
+             <input type="checkbox" name="status" (click)="checked(i)">
+          </div>
+
           <div class=" d-flex flex-fill card-container" id="modalActivate" data-toggle="modal" data-target="#fullCardModal"
             (click)="fullCardModal(i)">
             <!-- Card content -->
+
             <div class="card-body input-100 d-inline flex-fill" *ngIf="todo.status === 'done'; else elseId">
               <h4 class="card-title " id="modalActivate" data-toggle="modal" data-target="#fullCardModal" (click)="fullCardModal(i)">
                 <s>{{i + 1}}. {{todo.title}}</s></h4>
@@ -118,34 +124,20 @@
             </ng-template>
           </div>
           <div>
-            <!-- <button class="btn btn-primary" id="modalActivate" data-toggle="modal" data-target="#fullCardModal" (click)="fullCardModal(i)"></button> -->
             <div class="process-icon"></div>
-            <button class="btn btn-success" id="change{{i}}" (click)="cancelTask(i)">{{todo.status}}</button>
-            <button class="btn btn-primary" (click)="editTask(i)" ><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-            <button class="btn btn-danger" (click)="deleteTask(todo._id)"><i class="fa fa-trash fa-lg"></i></button>
+            <button class="btn btn-primary" value="edit" (click)="change(i)"></button>
+            <button class="btn btn-danger" (click)="deleteTask(todo._id)"></button>
           </div>
-          <div class="fullCardModal" >
-              <!-- <modal  class="modal fade bottom" id="fullCardModal" tabindex="-1"
-              role="dialog" aria-labelledby="fullCardModalLabel" aria-hidden="true">
-              <div class="modal-dialog " role="document">
-                <div class="modal-content">
-                  <div class="modal-header text-center">
-                    <h5 class="modal-title w-100 font-weight-bold" id="fullCardModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body" id="modalBody"></div>
-                   <div class="modal-footer" id="edit">
-                  <button class="login-form btn add" (click)="editTask(i)" >Edit</button>
-                  </div>
-                </div>
-              </div>
-            </modal> -->
-          </div>
+          <div class="fullCardModal" ></div>
+         </div>
         </div>
       </div>
 
+      <div class="contain">
+        <input type="text" id="title">
+        <input type="text" id="description">
+        <button class="click" id="" (click)="editTask()">put me</button>
+      </div>
 
 
 

@@ -26,9 +26,9 @@ export class UpdateUserComponent implements OnInit {
  // temporaryUserId = 'eyJhbGciOiJIUzI1NiJ9.bmV3dGVzdHVzZXJfbmV3dGVzdHBhc3M.6G0GjokS52wciQthCjbg1lxIBc_2euvZjhgw5igtZ8Y';
 
   constructor(private formBuilder: FormBuilder,
-    private router: Router,
-    private auth: AuthService,
-    private cookieService: CookieService) {}
+              private router: Router,
+              private auth: AuthService,
+              private cookieService: CookieService) {}
 
   ngOnInit() {
     this.updateForm = this.formBuilder.group({
@@ -78,9 +78,9 @@ export class UpdateUserComponent implements OnInit {
         password: this.updateForm.value.password,
         todoList: ''
       }));
-     const param = JSON.parse(this.cookieService.get(this.key));
+      const param = JSON.parse(this.cookieService.get(this.key));
       this.update(param);
-    console.log(this.validUser, this.updateForm.value, runner, param);
+      console.log(this.validUser, this.updateForm.value, runner, param);
       this.router.navigate(['/user', this.key]);
     }
   }
