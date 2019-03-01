@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
       this.registerForm = this.formBuilder.group({
-          firstName: ['', Validators.required], // pattern(this.name)],
+          firstName: ['', Validators.required, /* Validators.pattern(/^[A-z0-9]*$/),*/ Validators.minLength(1)],
           lastName: ['', Validators.required], // pattern(this.name)],
           email: ['', Validators.required], // pattern(this.email)],
           phone: ['', Validators.required], // pattern(this.phone)],
@@ -66,11 +66,9 @@ export class RegisterComponent implements OnInit {
       if (this.registerForm.invalid) {
           return;
       }
-      // this.cookieService.set('token', 'user');
       localStorage.setItem('user', JSON.stringify(this.registerForm.value));
       this.regisrer();
       document.getElementById('main').style.display = 'none';
       document.getElementById('mess').style.display = 'block';
-      // this.router.navigate(['main']);
   }
 }

@@ -25,9 +25,6 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import {
-  FilterPipe
-} from '../../services/filter.pipe';
 
 @Component({
   selector: 'app-todo',
@@ -38,7 +35,6 @@ export class TodoComponent implements OnInit {
 
   todos: Todo[] = [];
   todoList: {};
-  // user: {};
   btnStyle: string;
   key: string = this.cookieService.get('token');
   todoItem: FormGroup;
@@ -48,6 +44,7 @@ export class TodoComponent implements OnInit {
   path: string[] = ['todo'];
   order = 1;
   url: any;
+  size: number;
 
   public userData = JSON.parse(this.cookieService.get(this.cookieService.get('token')));
   public user = new User( this.userData.firstName,
@@ -94,7 +91,8 @@ export class TodoComponent implements OnInit {
     this.todoService.getTodo(this.key)
       .subscribe((res) => {
         this.todoList = res;
-        console.log(this.todoList);
+        this.size = Object.keys(res).length;
+        console.log(this.todoList, this.size);
       });
   }
 
@@ -136,9 +134,7 @@ export class TodoComponent implements OnInit {
     }
   }
 
-  fullCardModal(i) {
-    const title = this.todoList[i].title;
-    const description = this.todoList[i].description;
+  modalForm(title, description) {
     document.querySelector('.fullCardModal').innerHTML = `
     <modal  class="modal fade bottom" id="fullCardModal" tabindex="-1"
     role="dialog" aria-labelledby="fullCardModalLabel" aria-hidden="true">
@@ -161,6 +157,29 @@ export class TodoComponent implements OnInit {
     </div>
   </modal>
   `;
+  }
+
+  fullCardModal(id, i) {
+    let todoId = '';
+    let idx: number;
+    console.log(id, this.todoList[i]._id);
+    if (id !== this.todoList[i]._id) {
+      console.log(false);
+      todoId = id;
+      for (let n = 0; n < this.size; n++) {
+        if (todoId === this.todoList[n]._id) {
+          console.log('n' + n);
+          idx = n;
+          const title1 = this.todoList[idx].title;
+          const description1 = this.todoList[idx].description;
+          this.modalForm(title1, description1);
+        }
+      }
+    } else if (id === this.todoList[i]._id) {
+      const title = this.todoList[i].title;
+      const description = this.todoList[i].description;
+      this.modalForm(title, description);
+    }
   }
 
 change(idx) {

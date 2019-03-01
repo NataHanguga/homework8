@@ -6,7 +6,7 @@ export class Todo {
   public status: string;
   public selected: boolean;
 
-  constructor(values: Object = {}) {
+  constructor(values = {}) {
     Object.assign(this, values);
   }
 }
